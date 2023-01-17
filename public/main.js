@@ -29,18 +29,28 @@ window.addEventListener('load', function () {
     });
 
 
-   
+    function fixedHeader(x) {
+        if (x.matches) {
+            document.getElementsByClassName("navigation-wrap")[0].classList.add("position-fixed");
+        } else {
+            document.getElementsByClassName("navigation-wrap")[0].classList.remove("position-fixed");
+        }
+    }
+
+    var x = window.matchMedia("(max-width: 768px)")
+    fixedHeader(x)
+    x.addListener(fixedHeader)
+
 
 
         (function ($) {
 
 
 
-
             "use strict";
 
             $('body').on('mouseenter mouseleave', '.nav-item', function (e) {
-                if ($(window).width() > 750) {
+                if ($(window).width() > 768) {
                     var _d = $(e.target).closest('.nav-item'); _d.addClass('show');
                     setTimeout(function () {
                         _d[_d.is(':hover') ? 'addClass' : 'removeClass']('show');
