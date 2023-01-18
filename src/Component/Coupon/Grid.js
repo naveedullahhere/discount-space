@@ -64,7 +64,7 @@ export const Grid = ({ title, style, discount, rprice, cprice, image, singleurl 
                     Save
                   </p>
 
-                  <Tooltip title="save">
+                  <Tooltip title="Add to Cart">
 
 
                     <div className="wishlist like-container d-fle align-items-center btn bg-white">

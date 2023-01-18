@@ -1,10 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
-import email from "./assets/email0.png";
-import { motion } from 'framer-motion';
-import phone from "./assets/phone0.png";
+import React, { useState, useContext, useEffect } from 'react'; 
+import { motion } from 'framer-motion'; 
 import { useForm } from 'react-hook-form';
-import toast from "react-hot-toast";
-import address from "./assets/location0.png";
+import toast from "react-hot-toast"; 
 import { AppContext } from '../context/AppContext';
 import { PromiseButton } from './Buttons/PromiseButton';
 
@@ -57,7 +54,8 @@ export const Contact = () => {
 
         <>
 
-            <motion.div initial={{ transition: { duration: 1 }, opacity: 0 }} animate={{ transition: { duration: 1 }, opacity: 1 }} exit={{ transition: { duration: 1 }, opacity: 0 }}>
+<motion.div initial={{ transition: { duration: 1 }, opacity: 0 }} animate={{ transition: { duration: 1 }, opacity: 1 }} exit={{ transition: { duration: 1 }, opacity: 0 }}>
+
 
                 <div class="container-fluid">
                     <div class="row shadow-sm">

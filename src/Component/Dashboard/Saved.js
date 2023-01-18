@@ -28,7 +28,8 @@ export const Saved = () => {
 
 
     return (
-        <div>
+        <motion.div initial={{ transition: { duration: 1 }, opacity: 0 }} animate={{ transition: { duration: 1 }, opacity: 1 }} exit={{ transition: { duration: 1 }, opacity: 0 }}>
+
             <div className="container-fluid px-0">
                 <div className="row">
                     <div className="col-xl-3 col-lg-3 col-md-4 col-2"><Sidebar pageid={'saved'} /></div>
@@ -40,7 +41,7 @@ export const Saved = () => {
                                     <div class="row shadow-sm">
                                         <div class="col-md-12 py-3">
                                             <div className="d-flex justify-content-between">
-                                                <h1 class="text-uppercase text-black m-0">Saved</h1>
+                                                <h1 class="text-uppercase text-black m-0">My Cart</h1>
 
 
                                                 <div>
@@ -102,6 +103,6 @@ export const Saved = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     )
 }

@@ -63,8 +63,7 @@ export const Header = () => {
 
     return (
         <>
-            <div className="navigation-wrap bg-white start-header start-style">
-                <div className="">
+    <div className={`navigation-wrap bg-white start-header start-style ${isActive && "position-fixed"}`}>                <div className="">
                     <div className="row w-100 ">
                         <div className="col-12">
                             <nav className="navbar navbar-expand-md navbar-light px-xl-3 px-3">
@@ -129,7 +128,7 @@ export const Header = () => {
                                             {user ?
 
                                                 <div class="custom-dropdown-area cat-dropdown text-uppercase">
-                                                    <li class="list-unstyled dropdown-toggle" data-bs-toggle="dropdown"><Link to="#">{user.data.name}</Link></li>
+                                                    <li class="list-unstyled dropdown-toggle" data-bs-toggle="dropdown"><Link to="#"><i className='fa fa-user-alt me-3'></i>{user.data.name}</Link></li>
 
                                                     <ul class="custom-Dropdown dd" id="style-1" style={{ display: 'block' }}>
 
@@ -246,7 +245,7 @@ export const Header = () => {
                                     {user ?
 
                                         <li>
-                                            <a href="#" onClick={toggleMobNavProfile} class="comm-btn"  >{user.data.name}
+                                            <a href="#" onClick={toggleMobNavProfile} class="comm-btn"  ><i className='fa fa-user-alt me-3'></i>{user.data.name}
                                                 <span class={` ${ismobprofile ? "fas fa-caret-down third" : "fas fa-caret-down third rotate"}`} aria-hidden="true"></span>
                                             </a>
                                             <ul class={` ${ismobprofile ? "comm-show" : "comm-show show2"}`}>
@@ -274,7 +273,7 @@ export const Header = () => {
                     </div>
                 </div>
             </div >
-            <div class="top-links bg-black nav-2 container-fluid">
+            <div class="top-links bg-signature nav-2 container-fluid">
                 <div class="row">
                     <div class="col-12 d-flex justify-content-center ">
                         <div class="custom-dropdown-area cat-dropdown mx-4 text-uppercase">

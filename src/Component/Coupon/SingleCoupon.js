@@ -3,18 +3,16 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import us from "../assets/coupon/us.svg";
-import heart from "../assets/coupon/heart-line.png";
-import save from "../assets/coupon/bookmark-line.png";
 import GetCoupon from "../assets/coupon/getcoupon.png";
-import like from "../assets/coupon/like-line.png";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AppContext } from '../../context/AppContext';
-import { toast } from 'react-toastify';
+import { motion } from 'framer-motion';
+import { toast } from 'react-hot-toast';
 import { PromiseButton } from '../Buttons/PromiseButton';
 import { Spinner } from '../Spinner';
 import { Tooltip } from 'antd';
-import { HeartOutlined, HeartFilled, LikeFilled, LikeOutlined, BookFilled, BookOutlined } from '@ant-design/icons';
+import { HeartOutlined, HeartFilled, LikeFilled, LikeOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { createFromIconfontCN } from '@ant-design/icons';
 
 
 
@@ -108,11 +106,11 @@ export const SingleCoupon = () => {
     };
 
     const settingsThumbs = {
-        slidesToShow: 3,
         slidesToScroll: 1,
+        slidesToShow: Math.min(media.length, 3),
         asNavFor: '.slider-for',
         dots: false,
-        centerMode: true,
+        centerMode: false,
         swipeToSlide: true,
         focusOnSelect: true,
         centerPadding: '10px'
@@ -143,15 +141,16 @@ export const SingleCoupon = () => {
             navigate('/login');
         }
         var typp = typec;
-        setIsLoading(true);
+        setIsLoading({ ...isLoading, [typp]: true });
         postData(`${SITE_URL}api/web/reaction-post`, { type: typec, user_token: user && user.data.user_token, reference_type: "coupon", comment: "", reference_id: data.coupon.id })
             .then(res => {
                 if (res.success != false) {
-                    toast.success(`${typp} successfully!`);
                     data[typp] = true;
+                    toast.success(`Item ${typp === 'save' ? "Add to Cart" : typp} Successfully!`);
+
                 } else {
                     data[typp] = false;
-                    toast.success(`Remove ${typp} successfully!`);
+                    toast.success(`Item Removed from ${typp === 'save' ? "Cart" : typp} Successfully!`);
                 }
                 fetch(`${SITE_URL}api/web/react-items?user_id=${user ? user.data.id : ""}&user_token=${user.data.user_token}&type=${typp}`)
                     .then((response) => response.json())
@@ -185,8 +184,15 @@ export const SingleCoupon = () => {
         });
         return response.json();
     }
+    const IconFont = createFromIconfontCN({
+        scriptUrl: [
+            '//at.alicdn.com/t/font_1788044_0dwu4guekcwr.js', // icon-javascript, icon-java, icon-shoppingcart (overrided)
+            '//at.alicdn.com/t/font_1788592_a5xf2bdic3u.js', // icon-shoppingcart, icon-python <Space>
+        ],
+    });
     return (
-        <>
+        <motion.div initial={{ transition: { duration: 1 }, opacity: 0 }} animate={{ transition: { duration: 1 }, opacity: 1 }} exit={{ transition: { duration: 1 }, opacity: 0 }}>
+
             <div className="container">
                 {
 
@@ -229,6 +235,7 @@ export const SingleCoupon = () => {
 
                                                 )}
 
+
                                             </Slider>
                                         </div>
                                     </div>
@@ -237,14 +244,25 @@ export const SingleCoupon = () => {
                             <div className="col-md-8 p-4">
                                 <div className="couponimagedetaildiv my-auto">
                                     <small>
-                                        <p className="light-black">
-                                            Listing Expires in
-                                            <span className={`text-danger badge ${date === "Expired" && "text-bg-danger text-white"}`}>
-                                                <b>
-                                                    {date}
-                                                </b>
-                                            </span>
-                                        </p>
+
+                                        {date === "Expired" ?
+                                            <p className="light-black">
+                                                <span className={`badge text-bg-danger text-white}`}>
+                                                    <b>
+                                                        {date}
+                                                    </b>
+                                                </span>
+                                            </p>
+                                            :
+                                            <p className="light-black">
+                                                Listing Expires in
+                                                <span className={`text-danger badge  `}>
+                                                    <b>
+                                                        {date}
+                                                    </b>
+                                                </span>
+                                            </p>
+                                        }
                                     </small>
                                     <h3 className="text-start ps-0">{data.coupon.title}</h3>
                                     <div className="d-flex gap-2 pt-3 align-items-center">
@@ -256,7 +274,7 @@ export const SingleCoupon = () => {
                                     </div>
                                     <div className="d-flex gap-2 pt-4 align-items-center">
                                         <strike className="para mb-0 light-black">${data.coupon.compare_price}</strike>
-                                        <button href="#" class="btn bg-signature px-3 py-1 rounded-5">
+                                        <button href="#" class="btn bg-signature px-3 py-1 text-white rounded-5">
                                             -{data.coupon.discount}%
                                         </button>
                                         <h4 className="para mb-0 couponprice ">${data.coupon.regular_price}</h4>
@@ -265,8 +283,12 @@ export const SingleCoupon = () => {
                                         <div>
                                             <Tooltip title="Vouch It">
 
-                                                <a href={`${data.coupon.affiliate_url}`} className="d-flex gap-2 justify-content-between">
-                                                    <img src={`${GetCoupon}`} alt="getCoupon" class=" position-relative" style={{ zIndex: '8', width: '140px' }}></img>
+                                                <a
+                                                    target="_blank"
+
+                                                    href={`${data.coupon.affiliate_url}`} className="d-flex gap-2 justify-content-between">
+                                                    <img src={`${GetCoupon}`}
+                                                        alt="getCoupon" class=" position-relative" style={{ zIndex: '8', width: '140px' }}></img>
                                                 </a>
                                             </Tooltip>
                                             {/* <div className="share my-auto">
@@ -275,41 +297,59 @@ export const SingleCoupon = () => {
                                         </div>
                                         <div className="my-auto">
                                             <div className="coupon-btn-div">
+
+
+                                                <button className='bg-transparent border-0' onClick={() => handleItem("save")}>
+                                                    <Tooltip title="Add to Cart">
+                                                        {isLoading.save ? <div className="spinner d-flex justify-content-center align-items-center">
+                                                            <div className="spinner-border" style={{ "float": "right" }} role="status">
+                                                                <span className="visually-hidden">Loading...</span>
+                                                            </div>
+                                                        </div> :
+                                                            data.save ?
+
+
+                                                                <IconFont type="icon-shoppingcart" />
+
+                                                                :
+
+                                                                <ShoppingCartOutlined />
+
+                                                        }
+                                                    </Tooltip>
+                                                </button>
                                                 <button className='bg-transparent border-0' onClick={() => handleItem("wishlist")}>
                                                     <Tooltip title="wishlist">
 
-                                                        {data.wishlist ?
+                                                        {isLoading.wishlist ? <div className="spinner d-flex justify-content-center align-items-center">
+                                                            <div className="spinner-border" style={{ "float": "right" }} role="status">
+                                                                <span className="visually-hidden">Loading...</span>
+                                                            </div>
+                                                        </div> :
+                                                            data.wishlist ?
 
-                                                            <HeartFilled />
-                                                            :
+                                                                <HeartFilled />
+                                                                :
 
-                                                            <HeartOutlined />
+                                                                <HeartOutlined />
                                                         }
 
-                                                    </Tooltip>
-                                                </button>
-
-                                                <button className='bg-transparent border-0' onClick={() => handleItem("save")}>
-                                                    <Tooltip title="save">
-                                                        {data.save ?
-
-
-                                                            <BookFilled />
-                                                            :
-                                                            <BookOutlined />
-
-                                                        }
                                                     </Tooltip>
                                                 </button>
                                                 <button className='bg-transparent border-0' onClick={() => handleItem("like")}>
                                                     <Tooltip title="like">
 
-                                                        {data.like ?
-                                                            <LikeFilled />
+                                                        {isLoading.like ? <div className="spinner d-flex justify-content-center align-items-center">
+                                                            <div className="spinner-border" style={{ "float": "right" }} role="status">
+                                                                <span className="visually-hidden">Loading...</span>
+                                                            </div>
+                                                        </div> :
+                                                            data.like ?
+                                                                <LikeFilled />
 
-                                                            :
+                                                                :
 
-                                                            <LikeOutlined />
+                                                                <LikeOutlined />
                                                         }
 
                                                         <small className="my-auto">{data.like_count}</small>
@@ -451,7 +491,7 @@ export const SingleCoupon = () => {
                     }
                 </div>
             </div>
-        </>
+        </motion.div>
     )
 }
 

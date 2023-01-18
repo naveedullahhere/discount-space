@@ -30,6 +30,7 @@ export const BlogDetails = () => {
 
     return (
         <motion.div initial={{ transition: { duration: 1 }, opacity: 0 }} animate={{ transition: { duration: 1 }, opacity: 1 }} exit={{ transition: { duration: 1 }, opacity: 0 }}>
+
             <div className='sec py-5'>
                 {data && data.id &&
                     <div className="container text-start single-blog">

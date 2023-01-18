@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast';
 import { AppContext } from '../context/AppContext';
 import slider0 from "./assets/DiscountSp/slider.png";
+import { motion } from 'framer-motion';
 import { List } from './Coupon/List';
 import { Deal } from './Deals/Deal';
 import { Spinner } from './Spinner';
@@ -78,7 +79,8 @@ export const Home = () => {
         setIsLoading(true);
     }
     return (
-        <>
+        <motion.div initial={{ transition: { duration: 1 }, opacity: 0 }} animate={{ transition: { duration: 1 }, opacity: 1 }} exit={{ transition: { duration: 1 }, opacity: 0 }}>
+
             <div className="section sec-1" ref={page}>
 
                 <div className="slider">
@@ -152,7 +154,7 @@ export const Home = () => {
                                 }
                             </div>
                         </div>
-                        <div className="col-lg-4 col-md-4 col-sm-12 p-md-0">
+                        <div className="col-lg-4 col-md-4 col-sm-12 p-md-0 mt-md-0 mt-5">
                             <div className='row w-100 mx-auto'>
                                 <div className="col-12">
                                     <h1 className="heading">
@@ -181,6 +183,6 @@ export const Home = () => {
                     </div>
                 </div>
             </div>
-        </>
+        </motion.div>
     )
 }

@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
 import { List } from '../Coupon/List';
+import { motion } from 'framer-motion';
 import { Filter } from '../Filter/Filter';
 import { Spinner } from '../Spinner';
 
@@ -61,7 +62,8 @@ export const Deals = () => {
     }
 
     return (
-        <>
+        <motion.div initial={{ transition: { duration: 1 }, opacity: 0 }} animate={{ transition: { duration: 1 }, opacity: 1 }} exit={{ transition: { duration: 1 }, opacity: 0 }}>
+
             <div class="container-fluid">
                 <div class="row shadow-sm">
                     <div class="col-md-12 py-3">
@@ -158,6 +160,6 @@ export const Deals = () => {
                 </div>
             </div>
 
-        </>
+        </motion.div>
     )
 }

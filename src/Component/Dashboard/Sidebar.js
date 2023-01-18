@@ -51,10 +51,10 @@ export const Sidebar = ({ pageid }) => {
                             </li>
                             <li>
                                 <Link to={'/saved'} className={`${pageid === "saved" && "active"}`}>
-                                    <i class='fa fa-save'></i>
-                                    <span className="link_names">Saved</span>
+                                    <i class='fa fa-shopping-cart'></i>
+                                    <span className="link_names">My Cart</span>
                                 </Link>
-                                <span className="tooltip">Saved</span>
+                                <span className="tooltip">My Cart</span>
                             </li>
                             {/* <li>
                                 <Link to={'/completed-projects'} className={`${pageid === "cproject" && "active"}`}>

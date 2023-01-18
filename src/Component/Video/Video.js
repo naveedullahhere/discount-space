@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../context/AppContext';
 import { Spinner } from '../Spinner';
+import { motion } from 'framer-motion';
 import { VideoItem } from './VideoItem'
 
 export const Video = () => {
@@ -25,7 +26,8 @@ export const Video = () => {
     }, [])
 
     return (
-        <>
+        <motion.div initial={{ transition: { duration: 1 }, opacity: 0 }} animate={{ transition: { duration: 1 }, opacity: 1 }} exit={{ transition: { duration: 1 }, opacity: 0 }}>
+
             <div class="container-fluid">
                 <div class="row shadow-sm">
                     <div class="col-md-12 py-3">
@@ -46,6 +48,6 @@ export const Video = () => {
                     }
                 </div>
             </div>
-        </>
+        </motion.div>
     )
 }

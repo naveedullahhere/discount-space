@@ -67,8 +67,8 @@ export const Login = () => {
         return response.json();
     }
     return (
-        <motion.div initial={{ opacity: 0, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ transition: { duration: 0.3 }, opacity: 0, x: 100 }}>
-            <div className="loginMain">
+        <motion.div initial={{ transition: { duration: 1 }, opacity: 0 }} animate={{ transition: { duration: 1 }, opacity: 1 }} exit={{ transition: { duration: 1 }, opacity: 0 }}>
+      <div className="loginMain">
 
                 <form onSubmit={handleSubmit(onSubmit)} className="login-box" method='POST' autoComplete="off">
                     <div className="fs-5">
@@ -83,7 +83,8 @@ export const Login = () => {
 
                     <div className="input-box">
                         <input type="password" name="password" autoComplete="off" className="input pass-input" id="password" required {...register('password', { minLength: 8 })} onChange={(e) => setPassword(e.target.value)} />
-                        <img src="assets/img/view.png" className="view-pass" alt="" />
+                    
+                        <div></div>
                         <label htmlFor="password">Password</label>
                     </div>
                     {errors.password && <span className='para-sm text-dark'>Password Must 8 Character</span>}

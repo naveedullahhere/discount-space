@@ -49,6 +49,7 @@ export const About = () => {
     return (
 
         <motion.div initial={{ transition: { duration: 1 }, opacity: 0 }} animate={{ transition: { duration: 1 }, opacity: 1 }} exit={{ transition: { duration: 1 }, opacity: 0 }}>
+
             <div className="about sec image-banner">
                 <div className="container h-100">
                     <div className="row h-100">
