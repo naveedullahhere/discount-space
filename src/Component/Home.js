@@ -8,11 +8,15 @@ import { List } from './Coupon/List';
 import { Deal } from './Deals/Deal';
 import { Spinner } from './Spinner';
 import { AppstoreOutlined, BarsOutlined } from '@ant-design/icons';
+import { TagsHeader } from './layout/TagsHeader';
+
+
 
 export const Home = () => {
 
-    const { URL, API_TOKEN, user, dispatch, style, setStyle, APP_NAME, setTitle } = useContext(AppContext);
+    const { URL, API_TOKEN, user, dispatch, style, setStyle, APP_NAME, setTitle, heartedTags } = useContext(AppContext);
 
+ 
 
     const [isLoading, setIsLoading] = useState(true);
     const [isStoreLoading, setIsStoreLoading] = useState(true);
@@ -21,8 +25,9 @@ export const Home = () => {
     const [isErr, setIsError] = useState(false);
     const [currTab, setCurrTab] = useState(1);
     const [vll, setvll] = useState(1);
-    const [data, setData] = useState([]);
+    const [slider, setSlider] = useState([]);
     const [dataDeal, setDealData] = useState([]);
+    const [data, setData] = useState([]);
     const [img, setImg] = useState(null);
     const [imgDeal, setDealImg] = useState(null);
 
@@ -37,6 +42,14 @@ export const Home = () => {
                 setData([]);
                 setIsError(true);
                 setIsLoading(false);
+                toast.error("something went wrong!");
+            }
+            );
+        fetch(`${URL}public/api/web/slider`)
+            .then((response) => response.json())
+            .then((actualData) => { setSlider(actualData); })
+            .catch((err) => {
+                setSlider([]);
                 toast.error("something went wrong!");
             }
             );
@@ -78,29 +91,39 @@ export const Home = () => {
         }, 1000);
         setIsLoading(true);
     }
+
     return (
         <motion.div initial={{ transition: { duration: 1 }, opacity: 0 }} animate={{ transition: { duration: 1 }, opacity: 1 }} exit={{ transition: { duration: 1 }, opacity: 0 }}>
+            {user && heartedTags.length != 0 ?
+                <TagsHeader /> : ""
+            }
+            {slider.data ?
 
-            <div className="section sec-1" ref={page}>
+                <div className="section sec-1" ref={page}>
 
-                <div className="slider">
-                    <div id="carouselExample" className="carousel slide">
-                        <div className="carousel-inner">
-                            <div className="carousel-item active">
-                                <img src={slider0} className="d-block w-100" alt="..." />
-                            </div>
+                    <div className="slider">
+                        <div id="carouselExample" className="carousel slide">
+                            {slider.data.map((item) => {
+                                return <div className="carousel-inner" key={item.id}>
+                                    <div className="carousel-item active">
+                                        <img src={`${slider.image_path}/${item.image}`} className="d-block w-100" alt="..." />
+                                    </div>
+                                </div>
+                            })}
+
+                            <button className="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span className="visually-hidden">Previous</span>
+                            </button>
+                            <button className="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span className="visually-hidden">Next</span>
+                            </button>
                         </div>
-                        <button className="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span className="visually-hidden">Previous</span>
-                        </button>
-                        <button className="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span className="visually-hidden">Next</span>
-                        </button>
                     </div>
                 </div>
-            </div>
+
+                : ""}
 
             <div className="sect py-md-5 py-3">
                 <div className="container">

@@ -73,7 +73,7 @@ export const List = ({ title, style, discount, rprice, cprice, image, singleurl,
             '//at.alicdn.com/t/font_1788044_0dwu4guekcwr.js', // icon-javascript, icon-java, icon-shoppingcart (overrided)
             '//at.alicdn.com/t/font_1788592_a5xf2bdic3u.js', // icon-shoppingcart, icon-python <Space>
         ],
-    });  
+    });
 
     if (style === "List")
         return (
@@ -307,7 +307,7 @@ export const List = ({ title, style, discount, rprice, cprice, image, singleurl,
         )
     else {
         return (
-            <div className="col-md-4 col-sm-6 p-0 grid px-2 my-2 mainview">
+            <div className={`col-md-4 col-sm-6 p-0 grid px-2 my-2 mainview`}>
                 <div className="main-list-card shadow bg-white h-100">
                     <div className="my-sm-2 my-1 px-3 pt-md-3 px-md-3 pt-2">
                         <div className="align-items-center">

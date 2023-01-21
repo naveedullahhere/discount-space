@@ -1,17 +1,16 @@
 
 import './App.css';
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Link } from "react-router-dom";
 import { Header } from './Component/layout/Header';
 import { Footer } from './Component/layout/Footer';
 import { MainRoutes } from './MainRoutes';
 import { AppContext } from "./context/AppContext.js";
 import { useState, useEffect } from 'react';
 import { URL, APP_NAME, API_TOKEN, SITE_URL } from './config'
-import { Toaster } from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast";
 import { useSelector, useDispatch } from 'react-redux';
 import { removeUserData, addUserData, updateUserData, setStyle } from './actions';
-import { PayPalScriptProvider } from "@paypal/react-paypal-js";
-
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 function App() {
   const dispatch = useDispatch();
@@ -25,7 +24,10 @@ function App() {
   // var style = "list";
   // console.log(items);
   const [couponItems, setCouponItems] = useState([]);
+  const [currentTag, setCurrentTag] = useState('');
+  const [heartedTags, setHeartedTags] = useState([]);
   const [FilterCategory, setFilterCategory] = useState([]);
+  const [keywords, setKeywords] = useState([]);
   const [FilterStore, setFilterStore] = useState([]);
   const [WishlistItems, setWishlistItems] = useState([]);
   const [LikedItems, setLikedItems] = useState([]);
@@ -37,12 +39,10 @@ function App() {
   const [search, setSearch] = useState("");
   const [noteValue, setNoteValue] = useState("");
   const [img, setImg] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
 
   // var APP_NAME = APP_NAME;
 
-  var values = {
-    SITE_URL, API_TOKEN, teams, teamsImgPath, couponItems, setCouponItems, setStyle, style, SavedItems, setSavedItems, WishlistItems, LikedItems, setLikedItems, setWishlistItems, search, setSearch, setNoteValue, noteValue, FilterCategory, setFilterCategory, FilterStore, setFilterStore, setTitle, Title, APP_NAME, URL, data, setData, img, setImg, removeUserData, addUserData, updateUserData, dispatch, user
-  }
 
   useEffect(() => {
     fetchTeams();
@@ -50,6 +50,35 @@ function App() {
     let categ = `${URL}api/web/category?token=${user && user.data.user_token}&type=coupon&api_token=${API_TOKEN}`;
     fetchStore(store);
     fetchCateg(categ);
+    if (user) {
+      fetch(`${URL}api/web/getgoals`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_token: user.data.user_token })
+      })
+        .then((response) => response.json())
+        .then((actualData) => {
+          if (JSON.parse(actualData[0].keywords).length != 0) {
+            console.log("then");
+            setHeartedTags(JSON.parse(actualData[0].keywords));
+          }
+          else {
+            console.log("thenn1");
+            setTimeout(() => {
+              setShowPopup(true);
+            }, 3000);
+          }
+        })
+    }
+    fetch(`${URL}api/web/keywords`)
+      .then((response) => response.json())
+      .then((actualData) => { setKeywords(actualData); })
+      .catch((err) => {
+        toast.error("something went wrong!");
+      }
+      );
   }, []);
 
   const fetchStore = async (url) => {
@@ -83,15 +112,110 @@ function App() {
 
 
   document.title = Title;
+
+  const continueWithSocials = (type, credentials, where, domain) => {
+
+    if (where === 'login') {
+
+      fetch(`${URL}api/web/loginwithsocial`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ credentials: credentials, type: type, domain: domain })
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          if (data.success != false) {
+            dispatch(addUserData(data.data, []));
+            toast.success(data.message);
+          } else {
+            toast.error(data.message);
+          }
+        }).catch((err) => {
+          toast.error("Something went wrong!");
+        })
+    }
+    else if (where === 'signup') {
+      if (type === 'facebook') {
+        fetch(`${URL}api/web/signupwithsocial`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ credentials: credentials, type: type, domain: domain })
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success != false) {
+              dispatch(addUserData(data.data, []));
+              toast.success(data.message);
+            } else {
+              toast.error(data.message);
+            }
+          }).catch((err) => {
+            toast.error("Something went wrong!");
+          })
+      }
+
+      else {
+        fetch(`${URL}api/web/signupwithsocial`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ credentials: credentials, type: type, domain: domain })
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success != false) {
+              dispatch(addUserData(data.data, []));
+              toast.success(data.message);
+            } else {
+              toast.error(data.message);
+            }
+          }).catch((err) => {
+            toast.error("Something went wrong!");
+          })
+      }
+    }
+
+    else {
+      toast.error("Something went wrong!");
+    }
+  }
+
+  var values = {
+    SITE_URL, API_TOKEN, teams, teamsImgPath, currentTag, continueWithSocials, setCurrentTag, keywords, couponItems, heartedTags, setHeartedTags, setCouponItems, setStyle, style, SavedItems, setSavedItems, WishlistItems, LikedItems, setLikedItems, setWishlistItems, search, setSearch, setNoteValue, noteValue, FilterCategory, setFilterCategory, FilterStore, setFilterStore, setTitle, Title, APP_NAME, URL, data, setData, img, setImg, removeUserData, addUserData, updateUserData, dispatch, user
+  }
   return (
-    <AppContext.Provider value={values}>
-      <BrowserRouter>
-        <Header />
-        <MainRoutes />
-        <Footer />
-        <Toaster position="top-right" containerStyle={{ "transform": "translateY(104px)" }} />
-      </BrowserRouter>
-    </AppContext.Provider>
+    <GoogleOAuthProvider clientId="191543384667-v96v2vm38b2sib51itnfvsbk1p130ul9.apps.googleusercontent.com">
+
+
+      <AppContext.Provider value={values}>
+        <BrowserRouter>
+          {
+            showPopup &&
+            <>
+              <div className="popup-overlay"></div>
+              <div class="popup">
+                <button id="close" onClick={() => setShowPopup(false)}>&times;</button>
+                <h2 className='mb-0'>Can't Use Our New Free Goals Feature?</h2>
+                <p>
+                  Hurry!!! Go And Add Some Goals TO Improve Your Experience with Discount Space!
+                </p>
+                <Link to="/goals" className='btn bg-signature text-white' onClick={() => setShowPopup(false)}>Let's Goooo</Link>
+              </div>
+            </>
+          }
+          <Header />
+          <MainRoutes />
+          <Footer />
+          <Toaster position="top-right" containerStyle={{ "transform": "translateY(104px)" }} />
+        </BrowserRouter>
+      </AppContext.Provider>
+    </GoogleOAuthProvider>
   );
 }
 
