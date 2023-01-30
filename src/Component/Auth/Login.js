@@ -8,7 +8,7 @@ import { PromiseButton } from '../Buttons/PromiseButton';
 import { GoogleButton } from './GoogleButton';
 import { FacebookButton } from './FacebookButton';
 
-export const Login = () => {
+export const Login = ({ continueWithSocials }) => {
 
     const { URL, dispatch, addUserData, setTitle, API_TOKEN, APP_NAME, setWishlistItems, setHeartedTags, user } = useContext(AppContext);
     const [email, setEmail] = useState("");
@@ -80,6 +80,7 @@ export const Login = () => {
         });
         return response.json();
     }
+
     return (
         <motion.div initial={{ transition: { duration: 1 }, opacity: 0 }} animate={{ transition: { duration: 1 }, opacity: 1 }} exit={{ transition: { duration: 1 }, opacity: 0 }}>            <div className="loginMain">
 
@@ -108,19 +109,19 @@ export const Login = () => {
                 <button type='submit' className='py-2'>
                     <PromiseButton title={"Login"} typ='text-white' loading={isLoading} />
                 </button>
-                <div className="auth-action">
-                    <Link to="/register">Sign Up</Link>
-                    {/* <Link to="/password/reset">Forget Password?</Link> */}
-                </div>
+                <div className="or"></div>
                 <div className="mb-3 glButton">
 
-                    <GoogleButton where={'login'} />
+                    <GoogleButton continueWithSocials={continueWithSocials} where={'login'} />
 
                 </div>
                 <div className="my-3 fbButton">
 
-                    <FacebookButton where={'login'} />
+                    <FacebookButton continueWithSocials={continueWithSocials} where={'login'} />
 
+                </div>
+                <div className="auth-action">
+                    Don't have an account? <Link to="/register">Sign Up</Link>
                 </div>
             </form>
         </div>
